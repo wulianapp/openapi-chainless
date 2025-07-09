@@ -59,6 +59,63 @@ export default function Demo() {
 
 ---
 
+## 自定义弹窗
+
+你可以通过 `CustomModal` 参数自定义未安装授权 App 时的弹窗内容和样式。
+
+#### 1. 实现自定义弹窗组件
+
+```tsx
+import React from 'react';
+import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+
+const MyCustomModal = ({ visible, onCancel, onConfirm }) => (
+  <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
+    <View style={styles.overlay}>
+      <View style={styles.container}>
+        <Text style={styles.title}>自定义弹窗标题</Text>
+        <Text style={styles.desc}>这里是自定义的弹窗内容，你可以放任何提示、图片或说明。</Text>
+        <View style={styles.buttonRow}>
+          <TouchableOpacity onPress={onCancel} style={styles.cancelBtn}>
+            <Text style={styles.cancelText}>取消</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onConfirm} style={styles.confirmBtn}>
+            <Text style={styles.confirmText}>去安装/跳转</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  </Modal>
+);
+
+const styles = StyleSheet.create({
+  overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center' },
+  container: { width: 320, backgroundColor: '#fff', borderRadius: 16, padding: 24, alignItems: 'center' },
+  title: { fontSize: 18, fontWeight: 'bold', marginBottom: 8, color: '#222' },
+  desc: { fontSize: 15, color: '#222', marginBottom: 16, textAlign: 'center' },
+  buttonRow: { flexDirection: 'row', width: '100%', justifyContent: 'space-between', marginTop: 8 },
+  cancelBtn: { flex: 1, backgroundColor: '#f2f3f5', borderRadius: 8, marginRight: 8, paddingVertical: 12, alignItems: 'center' },
+  confirmBtn: { flex: 1, backgroundColor: '#1890ff', borderRadius: 8, marginLeft: 8, paddingVertical: 12, alignItems: 'center' },
+  cancelText: { color: '#666', fontSize: 16 },
+  confirmText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+});
+```
+
+#### 2. 传递自定义弹窗给 useLaunchAuthApp
+
+```tsx
+import { useLaunchAuthApp } from 'openapi@chainless';
+import MyCustomModal from './MyCustomModal';
+
+const { launch, modal } = useLaunchAuthApp({
+  clientId: 'your-client-id',
+  CustomModal: MyCustomModal,
+  onDeepLink: (url, params) => { /* ... */ }
+});
+```
+
+---
+
 ## API 说明
 
 ### useLaunchAuthApp(options)
@@ -90,7 +147,7 @@ export default function Demo() {
   ```
 - 用户拒绝授权：
   ```js
-  { code: '' }
+  { code: '', phone: false, email: false }
   ```
 
 ---
