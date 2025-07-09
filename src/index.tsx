@@ -5,6 +5,11 @@ import AuthAppModal from './AuthAppModal';
 interface UseLaunchAuthAppOptions {
   clientId: string;
   onDeepLink?: (url: string, params: Record<string, string>) => void;
+  CustomModal?: React.ComponentType<{
+    visible: boolean;
+    onCancel: () => void;
+    onConfirm: () => void;
+  }>;
 }
 
 const parseQueryParams = (url: string): Record<string, string> => {
@@ -24,7 +29,7 @@ const parseQueryParams = (url: string): Record<string, string> => {
 };
 
 export const useLaunchAuthApp = (options: UseLaunchAuthAppOptions) => {
-  const { clientId, onDeepLink } = options;
+  const { clientId, onDeepLink, CustomModal } = options;
   const [modalVisible, setModalVisible] = useState(false);
   const [pendingUrl, setPendingUrl] = useState<string>('https://download.chainlessdw20.com/');
 
@@ -62,9 +67,10 @@ export const useLaunchAuthApp = (options: UseLaunchAuthAppOptions) => {
     setModalVisible(false);
   }, []);
 
-  // Modal 组件
+  // Modal 组件，支持自定义
+  const ModalComponent = CustomModal || AuthAppModal;
   const AuthModal = (
-    <AuthAppModal
+    <ModalComponent
       visible={modalVisible}
       onCancel={handleCancel}
       onConfirm={handleConfirm}

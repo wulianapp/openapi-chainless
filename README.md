@@ -1,7 +1,6 @@
 # openapi@chainless
 
 
-
 One-tap login plugin for React Native using deep linking between apps.
 ![icon_01](./src/assets/icon_01.png)
 
@@ -67,11 +66,32 @@ export default function Demo() {
 | 参数         | 类型                                               | 说明                         |
 | ------------ | -------------------------------------------------- | ---------------------------- |
 | clientId     | string                                            | 唤起授权 App 时传递的 clientId|
-| onDeepLink   | (url: string, params: Record<string, string>) => void | 监听被其他 App 拉起时的回调   |
+| onDeepLink   | (url: string, params: Record<string, any>) => void | 监听被其他 App 拉起时的回调   |
 
 返回值：
 - `launch`: () => void 主动唤起授权 App
 - `modal`: ReactNode 未安装授权 App 时的弹窗组件
+
+#### onDeepLink 回调参数说明
+- `url`: 被拉起时的完整链接。
+- `params`: 解析后的参数对象，主要字段如下：
+  - `code`: 授权结果码。**同意授权时为非空字符串，拒绝时为空字符串**。
+  - `phone`: boolean，**为 true 表示授权账号有手机号**。
+  - `email`: boolean，**为 true 表示授权账号有邮箱**。
+
+**示例：**
+- 用户同意授权且账号有手机号和邮箱：
+  ```js
+  { code: 'xxxx', phone: true, email: true }
+  ```
+- 用户同意授权但账号无邮箱：
+  ```js
+  { code: 'xxxx', phone: true, email: false }
+  ```
+- 用户拒绝授权：
+  ```js
+  { code: '' }
+  ```
 
 ---
 
