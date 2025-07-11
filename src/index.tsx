@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Linking } from 'react-native';
 import AuthAppModal from './AuthAppModal';
+import axios from 'axios';
 
 interface UseLaunchAuthAppOptions {
   clientId: string;
@@ -48,10 +49,33 @@ export const useLaunchAuthApp = (options: UseLaunchAuthAppOptions) => {
   }, [onDeepLink]);
 
   // 尝试唤起App
-  const launch = useCallback(() => {
-    Linking.openURL('com.chainlessandroid.app://login?clientId=' + clientId).catch(() => {
-      setModalVisible(true);
-    });
+  const launch = useCallback(async () => {
+    try {
+      const resultInfo = await axios.get('http://59.36.210.102:8064/oauth2/client_info', {
+        params: {
+          client_id: clientId,
+        },
+      });
+      console.log('resultInfo',resultInfo)
+      if(resultInfo.data.code != 0){
+        return {
+            success:false,
+            // data:resultInfo.data.data,
+            message:resultInfo.data.msg
+        };
+      }
+     
+      await Linking.openURL('com.chainlessandroid.app://login?clientId=' + clientId);
+
+       return {
+            success:true,
+            // data:resultInfo.data.data,
+            message:''
+        };
+
+    } catch (error) {
+        console.log(444444444,error)
+    }
   }, [clientId]);
 
   // 跳转到第三方浏览器

@@ -1,4 +1,4 @@
-# openapi@chainless
+# openapi-chainless
 
 
 One-tap login plugin for React Native using deep linking between apps.
@@ -6,7 +6,7 @@ One-tap login plugin for React Native using deep linking between apps.
 
 ## 功能简介
 
-`openapi@chainless` 是一个基于 App 间 deep link 唤起的 React Native 一键登录插件，适用于需要在多个 App 之间安全快捷传递登录凭证的场景。
+`openapi-chainless` 是一个基于 App 间 deep link 唤起的 React Native 一键登录插件，适用于需要在多个 App 之间安全快捷传递登录凭证的场景。
 
 - 支持一键唤起第三方授权 App 并回传 Code
 - 支持自定义 Modal 提示未安装授权 App 时的用户引导
@@ -16,11 +16,11 @@ One-tap login plugin for React Native using deep linking between apps.
 ## 安装
 
 ```sh
-npm install openapi@chainless
+npm install openapi-chainless
 # 或
-yarn add openapi@chainless
+yarn add openapi-chainless
 # 或
-pnpm add openapi@chainless
+pnpm add openapi-chainless
 ```
 
 ---
@@ -32,7 +32,7 @@ pnpm add openapi@chainless
 ```tsx
 import React from 'react';
 import { Button, View } from 'react-native';
-import { useLaunchAuthApp } from 'openapi@chainless';
+import { useLaunchAuthApp } from 'openapi-chainless';
 
 export default function Demo() {
   const { launch, modal } = useLaunchAuthApp({
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
 #### 2. 传递自定义弹窗给 useLaunchAuthApp
 
 ```tsx
-import { useLaunchAuthApp } from 'openapi@chainless';
+import { useLaunchAuthApp } from 'openapi-chainless';
 import MyCustomModal from './MyCustomModal';
 
 const { launch, modal } = useLaunchAuthApp({
@@ -126,7 +126,7 @@ const { launch, modal } = useLaunchAuthApp({
 | onDeepLink   | (url: string, params: Record<string, any>) => void | 监听被其他 App 拉起时的回调   |
 
 返回值：
-- `launch`: () => void 主动唤起授权 App
+- `launch`: () =>  { success: boolean; message: string } 主动唤起授权 App
 - `modal`: ReactNode 未安装授权 App 时的弹窗组件
 
 #### onDeepLink 回调参数说明
